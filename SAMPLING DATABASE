@@ -1,0 +1,31 @@
+# To randomly sample from a data frame:
+
+> mtcars[sample(nrow(mtcars),10),]
+
+                  mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Toyota Corona    21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+AMC Javelin      15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+Camaro Z28       13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+Ferrari Dino     19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+Dodge Challenger 15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+Merc 450SE       16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+Fiat 128         32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+Merc 450SLC      15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+Pontiac Firebird 19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+Merc 280C        17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+
+# To now create a completely new data frame that has brand-new row names (no longer car models) preserving the order:
+
+new_data_frame <- data.frame(cbind(sample_cars[,1],sample_cars[,2]))
+
+     X1 X2
+1  21.5  4
+2  15.2  8
+3  13.3  8
+4  19.7  6
+5  15.5  8
+6  16.4  8
+7  32.4  4
+8  15.2  8
+9  19.2  8
+10 17.8  6
