@@ -1,0 +1,190 @@
+head(mtcars)
+                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+#SELECTING A COLUMN:
+--------------------
+
+YES:
+
+> mtcars[ ,"mpg"]           # Notice the comma in front of "mpg" - it selects all rows. The spaces make no difference.
+
+ [1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4
+[13] 17.3 15.2 10.4 10.4 14.7 32.4 30.4 33.9 21.5 15.5 15.2 13.3
+[25] 19.2 27.3 26.0 30.4 15.8 19.7 15.0 21.4
+
+NO:
+
+> mtcars[mtcars$mpg]        # It would, however, work well by just typing mtcars$mpg - no brackets.
+
+Error in `[.data.frame`(mtcars, mtcars$mpg) : undefined columns selected
+> mtcars[,mtcars$mpg]
+Error in `[.data.frame`(mtcars, , mtcars$mpg) : 
+  undefined columns selected
+> mtcars[,mpg]
+Error in `[.data.frame`(mtcars, , mpg) : object 'mpg' not found
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+#SELECTING TWO COLUMNS:
+-----------------------
+
+YES:
+
+> mtcars[ ,c("mpg","cyl")]        # And it won't work with a semicolon, instead of a comma, or any other separation.
+                     mpg cyl
+Mazda RX4           21.0   6
+Mazda RX4 Wag       21.0   6
+Datsun 710          22.8   4
+Hornet 4 Drive      21.4   6
+
+NO:
+
+> mtcars[,"mpg""cyl"]
+Error: unexpected string constant in "mtcars[,"mpg""cyl""
+
+> mtcars[,"mpg"+"cyl"]
+Error in "mpg" + "cyl" : non-numeric argument to binary operator
+
+> mtcars[,"mpg"][,"cyl"]
+Error in mtcars[, "mpg"][, "cyl"] : incorrect number of dimensions
+
+> mtcars[,"mpg + cyl"]
+Error in `[.data.frame`(mtcars, , "mpg + cyl") : 
+  undefined columns selected
+  
+> mtcars[,"mpg cyl"]
+Error in `[.data.frame`(mtcars, , "mpg cyl") : undefined columns selected
+
+> mtcars[,"mpg";"cyl"]
+Error: unexpected ';' in "mtcars[,"mpg";"
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+#SELECT THE VALUES OF TWO COLUMNS FOR A PARTICULAR ROW:
+------------------------------------------------------
+
+YES:
+
+> mtcars["Mazda RX4", c("mpg","cyl")]     # Name of the row BEFORE the comma; name of the column/-s AFTER.
+
+          mpg cyl
+Mazda RX4  21   6
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+
+#RETURN ONLY THE VALUES OF A COLUMN CONDITIONAL ON THE VALUES ON A DIFFERENT COLUMN:
+-----------------------------------------------------------------------------------
+
+# Select the values of a column corresponding to specific values in a separate column: 
+# We want the miles per gallon of 6 cylinder cars
+# The thing to realize is that "values on a column" = "rows that meet certain criteria", i.e. before the comma!
+
+# USING THE $ SIGN BEFORE THE []:
+
+YES
+
+mtcars$mpg[mtcars$cyl==6]     #!!!! Won't work if the "==" part is abbreviated like mtcars$mpg["cyl"==6]
+
+data
+[1] 21.0 21.0 21.4 18.1 19.2 17.8 19.7
+
+
+NOT USING THE $ SIGN BEFORE []:
+
+YES
+
+mtcars[mtcars$cyl=="6", "mpg"]       # Again, it won't work as mtcars["cyl"==6, "mpg"]. 
+
+[1] 21.0 21.0 21.4 18.1 19.2 17.8 19.7
+
+# and...
+
+YES:
+
+For numerical variables, no need for " ":
+
+mtcars[mtcars$cyl==6, "mpg"]
+
+[1] 21.0 21.0 21.4 18.1 19.2 17.8 19.7
+
+
+NO:
+
+mtcars[mtcars$cyl==6, mtcars$mpg]     # Counterintuitive?
+
+Error in `[.data.frame`(mtcars, mtcars$cyl == 6, mtcars$mpg) : 
+  undefined columns selected
+
+NO: 
+
+mtcars["cyl"==6,"mpg"]              # Without the $ sign in front of the == doesn't seem to work.
+
+numeric(0)
+
+# Even after attaching...
+
+NO:
+
+attach(mtcars)
+mtcars["cyl"==6,"mpg"]
+
+numeric(0)
+
+NO:
+
+mtcars["cyl"==6,mpg]
+Error in `[.data.frame`(mtcars, "cyl" == 6, mpg) : 
+  undefined columns selected
+  
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+
+#RETURN ONLY THE VALUES OF ALL COLUMNS CONDITIONAL ON THE VALUES ON A SPECIFIC COLUMN:
+--------------------------------------------------------------------------------------
+
+mtcars[mtcars$cyl < 8, ]
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+
+#DEALING WITH NA'S AFTER SUBSETTING:
+-----------------------------------
+
+mtcars$mpg[1] <- NA
+mtcars[mtcars$cyl==6,]
+
+                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4        NA   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+
+mtcars[mtcars$cyl==6,"mpg"]
+[1]   NA 21.0 21.4 18.1 19.2 17.8 19.7
+
+mean(mtcars[mtcars$cyl==6,"mpg"])
+[1] NA
+
+mean(mtcars[mtcars$cyl==6,"mpg"],na.rm=T)
+[1] 19.53333
+
+
+# RETURN THE VALUES OF ALL COLUMNS CONDITIONAL ON MULTIPLE SELECTION CRITERIA:
+-----------------------------------------------------------------------------------------------------------------------------
+
+mtcars[mtcars$cyl==6 & mtcars$wt==2.875, ]
+
+              mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4 Wag  21   6  160 110  3.9 2.875 17.02  0  1    4    4
+
+# ... and to find out which row fulfills these criteria:
+
+which(mtcars$cyl==6 & mtcars$wt==2.875)
+
+[1] 2
