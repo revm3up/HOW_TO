@@ -1,0 +1,28 @@
+# Predicting miles per gallon based on weight of vehicle:
+
+fit <- lm(mpg ~ wt, data = mtcars)
+
+predict(fit, data.frame(wt=3), interval = "prediction")
+
+       fit      lwr      upr
+1 21.25171 14.92987 27.57355
+
+# A longer, but identical alternative:
+
+point <- data.frame(wt = 3)
+predict(fit, point, interval = "prediction")
+
+# Predicting when there are two explanatory variables (in this case, weight and transmition):
+
+fit <- lm(mpg ~ wt*am, data = mtcars)
+
+predict(fit, data.frame(wt = 0, am = "automatic"))
+
+fit <- lm(mpg ~ wt, mtcars)
+predict(fit, data.frame(wt = mtcars$wt))
+
+fit <- lm(mpg ~ wt, mtcars)
+dat <- data.frame(wt = mtcars$wt)
+fitted <- predict(fit, dat)
+data <- cbind(dat, fitted)
+smoothScatter(data, colramp = colorRampPalette(c("blue4","orange","red")))
