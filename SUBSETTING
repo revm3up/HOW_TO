@@ -5,6 +5,25 @@ Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
 
 -----------------------------------------------------------------------------------------------------------------------------
 
+# SUBSET COMMAND:
+-----------------
+
+subset(mtcars, mpg>18 & mpg<28)
+
+                   mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+...
+
+subset(mtcars, mpg>18 & mpg<28 & cyl==6)
+
+                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4      21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+...
+
+
 #SELECTING A COLUMN:
 --------------------
 
