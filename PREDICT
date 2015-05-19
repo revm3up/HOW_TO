@@ -2,27 +2,67 @@
 
 fit <- lm(mpg ~ wt, data = mtcars)
 
-predict(fit, data.frame(wt=3), interval = "prediction")
+predict(fit, data.frame(wt = 3), interval = "prediction")             # Notice the key: "data.frame()" and the "wt".
 
        fit      lwr      upr
 1 21.25171 14.92987 27.57355
+
+# OR without intervals:
+
+predict(fit, data.frame(wt = 3))
+
+       1 
+21.25171 
 
 # A longer, but identical alternative:
 
 point <- data.frame(wt = 3)
 predict(fit, point, interval = "prediction")
 
+=============================================================================================================================
+
 # Predicting when there are two explanatory variables (in this case, weight and transmition):
 
-fit <- lm(mpg ~ wt*am, data = mtcars)
+?mtcars
 
-predict(fit, data.frame(wt = 0, am = "automatic"))
+[, 9]	 am	 Transmission (0 = automatic, 1 = manual)
+
+str(mtcars)
+
+$ am  : num  1 1 1 0 0 0 0 0 0 0 ...
+
+mtcars$am <- as.factor(mtcars$am)
+str(mtcars)
+
+$ am  : Factor w/ 2 levels "0","1": 2 2 2 1 1 1 1 1 1 1 ...
+
+fit <- lm(mpg ~ wt * am, data = mtcars)
+
+predict(fit, data.frame(wt = 0, am = "0"))       #"0" is a factor that stands for automatic.
+
+       1 
+31.41606 
+
+=============================================================================================================================
+
+# To get predictions for an entire column of the initial data frame:
 
 fit <- lm(mpg ~ wt, mtcars)
+
 predict(fit, data.frame(wt = mtcars$wt))
 
-fit <- lm(mpg ~ wt, mtcars)
+        1         2         3         4         5         6         7         8 
+23.282611 21.919770 24.885952 20.102650 18.900144 18.793255 18.205363 20.236262 
+        9        10        11        12        13        14        15        16 
+20.450041 18.900144 18.900144 15.533127 17.350247 17.083024  9.226650  8.296712 
+...
+
+# Which is the same as:
+
 dat <- data.frame(wt = mtcars$wt)
 fitted <- predict(fit, dat)
+
+# Nice plot for fun:
+
 data <- cbind(dat, fitted)
 smoothScatter(data, colramp = colorRampPalette(c("blue4","orange","red")))
