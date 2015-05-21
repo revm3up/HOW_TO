@@ -207,3 +207,22 @@ Mazda RX4 Wag  21   6  160 110  3.9 2.875 17.02  0  1    4    4
 which(mtcars$cyl==6 & mtcars$wt==2.875)
 
 [1] 2
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+# ELIMINATE ENTIRE COLUMNS IN A MATRIX IF THERE ARE ANY ELEMENTS BELOW, EQUAL OR GREATER THAN A THRESHOLD:
+
+library(partitions)
+
+a <- compositions(9, 2)               # This returns a MATRIX with all the permutations of 2 integers adding up to 9.
+
+[1,] 9 8 7 6 5 4 3 2 1 0
+[2,] 0 1 2 3 4 5 6 7 8 9
+
+# Since we are simulating the toss of two dice, we want to eliminate columns with zeros or with results > 6:
+
+a[,which(!apply(a, 2, function(x){any(x > 6) + any(x == 0)}))]
+
+     [,1] [,2] [,3] [,4]
+[1,]    6    5    4    3
+[2,]    3    4    5    6
