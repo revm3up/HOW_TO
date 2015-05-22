@@ -226,3 +226,68 @@ a[,which(!apply(a, 2, function(x){any(x > 6) + any(x == 0)}))]
      [,1] [,2] [,3] [,4]
 [1,]    6    5    4    3
 [2,]    3    4    5    6
+
+===============================================================================================================================
+
+# What if we don't have a clue about which column or row to look for a specific threshold or mathematical equivalence to
+# make our selection of rows or columns:
+
+# Let's call mtcars something less unwieldy:
+
+M <- mtcars
+
+                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+...
+
+# Now let's say that we don't want any columns with any values equal to zero:
+
+M[                 , which(!apply(M, 2, function(x) any(x == 0)))]
+
+                     mpg cyl  disp  hp drat    wt  qsec gear carb
+Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46    4    4
+Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02    4    4
+Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61    4    1
+Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44    3    1
+Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02    3    2
+
+# Column vs is now gone. The same can be accomplished with:
+
+M[                 , which(apply(M, 2, function(x) all(x > 0)))]
+
+                     mpg cyl  disp  hp drat    wt  qsec gear carb
+Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46    4    4
+Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02    4    4
+Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61    4    1
+Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44    3    1
+
+# Let's try with two criteria:
+
+ M[                 , which(apply(M, 2, function(x) all(x > 0 & x < 350)))]
+ 
+                     mpg cyl  hp drat    wt  qsec gear carb
+Mazda RX4           21.0   6 110 3.90 2.620 16.46    4    4
+Mazda RX4 Wag       21.0   6 110 3.90 2.875 17.02    4    4
+Datsun 710          22.8   4  93 3.85 2.320 18.61    4    1
+Hornet 4 Drive      21.4   6 110 3.08 3.215 19.44    3    1
+Hornet Sportabout   18.7   8 175 3.15 3.440 17.02    3    2
+
+# Disp column had values > 350, so now it's gone.
+
+# Same results with:
+
+ M[                 , which(apply(M, 2, function(x) all(x > 0) & all(x < 350)))]
+ 
+ # And for row selection:
+ 
+ M[which(apply(M, 1, function(x) all(x < 100))),           ]
+ 
+                mpg cyl disp hp drat    wt  qsec vs am gear carb
+Fiat 128       32.4   4 78.7 66 4.08 2.200 19.47  1  1    4    1
+Honda Civic    30.4   4 75.7 52 4.93 1.615 18.52  1  1    4    2
+Toyota Corolla 33.9   4 71.1 65 4.22 1.835 19.90  1  1    4    1
+Fiat X1-9      27.3   4 79.0 66 4.08 1.935 18.90  1  1    4    1
